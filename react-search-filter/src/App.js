@@ -1,13 +1,16 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 function App() {
   const [items, setItems] = useState([]);
   const [query, setQuery] = useState("");
   const inputRef = useRef();
 
-  const filteredItems = items.filter((item) => {
-    return item.toLowerCase().includes(query.toLowerCase())
-  });
+  const filteredItems = useMemo(() => {
+    if (!query) return items;
+    return items.filter((item) => {
+      return item.toLowerCase().includes(query.toLowerCase());
+    });
+  }, [items, query]);
 
   function onSubmit(e) {
     e.preventDefault();
