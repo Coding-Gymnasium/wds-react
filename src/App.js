@@ -1,24 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import { useRef, useState } from "react";
 
 function App() {
+  const [items, setItems] = useState([]);
+  const inputRef = useRef();
+
+  function onSubmit(e) {
+    e.preventDefault();
+
+    const value = inputRef.current.value;
+
+    if (value === "") return;
+
+    setItems((prev) => {
+      return [...prev, value];
+    });
+
+    inputRef.current.value = "";
+  }
+
+  function onChange(e) {
+    const value = e.target.value;
+    setItems((prev) => {
+      return prev.filter((item) =>
+        item.toLowerCase().includes(value.toLowerCase())
+      );
+    });
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      Search: <input onChange={onChange} type="search" />
+      <form onSubmit={onSubmit}>
+        New Item: <input ref={inputRef} type="text" />
+        <button type="submit">Add Item</button>
+      </form>
+      <h3>Items:</h3>
+      {items.map((item, i) => (
+        <div key={i}>{item}</div>
+      ))}
+    </>
   );
 }
 
