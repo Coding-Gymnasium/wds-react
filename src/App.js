@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 
 function App() {
   const [items, setItems] = useState([]);
+  const [filterItems, setFilterItems] = useState([]);
   const inputRef = useRef();
 
   function onSubmit(e) {
@@ -15,16 +16,18 @@ function App() {
       return [...prev, value];
     });
 
+    setFilterItems((prev) => {
+      return [...prev, value];
+    });
+
     inputRef.current.value = "";
   }
 
   function onChange(e) {
     const value = e.target.value;
-    setItems((prev) => {
-      return prev.filter((item) =>
-        item.toLowerCase().includes(value.toLowerCase())
-      );
-    });
+    setFilterItems(
+      items.filter((item) => item.toLowerCase().includes(value.toLowerCase()))
+    );
   }
 
   return (
@@ -35,7 +38,7 @@ function App() {
         <button type="submit">Add Item</button>
       </form>
       <h3>Items:</h3>
-      {items.map((item, i) => (
+      {filterItems.map((item, i) => (
         <div key={i}>{item}</div>
       ))}
     </>
