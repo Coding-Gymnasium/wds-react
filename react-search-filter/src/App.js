@@ -2,8 +2,12 @@ import { useRef, useState } from "react";
 
 function App() {
   const [items, setItems] = useState([]);
-  const [filterItems, setFilterItems] = useState([]);
+  const [query, setQuery] = useState("");
   const inputRef = useRef();
+
+  const filteredItems = items.filter((item) => {
+    return item.toLowerCase().includes(query.toLowerCase())
+  });
 
   function onSubmit(e) {
     e.preventDefault();
@@ -16,29 +20,23 @@ function App() {
       return [...prev, value];
     });
 
-    setFilterItems((prev) => {
-      return [...prev, value];
-    });
-
     inputRef.current.value = "";
-  }
-
-  function onChange(e) {
-    const value = e.target.value;
-    setFilterItems(
-      items.filter((item) => item.toLowerCase().includes(value.toLowerCase()))
-    );
   }
 
   return (
     <>
-      Search: <input onChange={onChange} type="search" />
+      Search:{" "}
+      <input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        type="search"
+      />
       <form onSubmit={onSubmit}>
         New Item: <input ref={inputRef} type="text" />
         <button type="submit">Add Item</button>
       </form>
       <h3>Items:</h3>
-      {filterItems.map((item, i) => (
+      {filteredItems.map((item, i) => (
         <div key={i}>{item}</div>
       ))}
     </>
